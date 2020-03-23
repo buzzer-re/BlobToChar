@@ -1,18 +1,25 @@
 #include "FileManager.h"
+#include "Argparse.h"
 
 #include <memory>
 #include <string>
 #include <iostream>
 
 
-int main(int argc, char const *argv[])
+int main(int argc, char** argv)
 {
+    ArgParse args(argc, argv);
+    args.addArgument("--varname", true);
+    args.addArgument("--output", true);
+    args.addArgument("--insert-line", true);
+    args.parse();
     FileManager fileManager;
 
+    
     const std::string blobTarget = argv[1];
     
     std::string varName = argv[2];
-
+    
     if (fileManager.exists(blobTarget)) {
         std::string codeBuilder;
 
