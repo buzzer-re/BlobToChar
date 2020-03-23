@@ -6,20 +6,51 @@
 #include <iostream>
 
 
+#define BLOB_NAME   "blobname"
+#define VAR_NAME    "varname"
+#define FILE_NAME   "filename"
+#define LINE_NUMBER "linenumber"
+
+
+void displayHelp() {
+    std::cout << "Usage: ./blobBuilder --blobname <blob_path> --varname <variable_name> --linenumber <line_to_insert>\n";
+}
+
 int main(int argc, char** argv)
 {
-    ArgParse args(argc, argv);
-    args.addArgument("--varname", true);
-    args.addArgument("--output", true);
-    args.addArgument("--insert-line", true);
-    args.parse();
-    FileManager fileManager;
+    if (argc < 3) {
+        displayHelp();
+        return 1;
+    } 
 
+    ArgParse args(argc, argv);
+    args.addArgument(BLOB_NAME, true);
+    args.addArgument(VAR_NAME, true);
+    args.addArgument(FILE_NAME, true);
+    args.addArgument(LINE_NUMBER, true);
     
-    const std::string blobTarget = argv[1];
+    if (!args.parse()) return 1;
+
+    FileManager fileManager;
     
-    std::string varName = argv[2];
-    
+    const std::string blobTarget = args.getArgument(BLOB_NAME).argValue;
+    std::string varName = args.getArgument(VAR_NAME).argValue;
+    std::string insertFile = args.getArgument(FILE_NAME).argValue;
+    // std::string lineNumber = args.getArgument(LINE_NUMBER).argValue;
+    // int lineNumber_i;
+
+    // if (lineNumber != "") {
+    //     try {
+    //         lineNumber = std::stoi(lineNumber);
+    //     } catch (std::invalid_argument const &e) {
+    //         std::cerr << "Line number must be a number!\n";
+    //         return 1;
+    //     } catch (std::out_of_range const&e) {
+    //         std::cerr << "Dud, are u trying overflow me ?\n";
+    //         return 1;
+    //     }
+    // }
+
     if (fileManager.exists(blobTarget)) {
         std::string codeBuilder;
 
@@ -37,8 +68,10 @@ int main(int argc, char** argv)
         delete[] hexRep;
         codeBuilder += "};";
 
+    } else {
+        std::cerr << "Invalid file " << blobTarget << std::endl;
+        return 1;
     }
-
 
     return 0;
 }

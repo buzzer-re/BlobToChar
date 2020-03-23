@@ -22,14 +22,16 @@ struct Argument {
 class ArgParse {
 public:
     ArgParse(int argc, char* argv[]);
-    void parse();
+    bool parse();
 
     bool addArgument(const std::string& argument, bool required);
     std::unordered_map<std::string, Argument>& getArgumentMap() const;
+    
+    Argument& getArgument(const std::string& argument);
 
 private:
     std::unordered_map<std::string, Argument> arguments;
-    std::unordered_map<std::string, Argument>::const_iterator argIt;
+    std::unordered_map<std::string, Argument>::iterator argIt;
     int argc;
     char** argv; /// An pointer to argv
 };
