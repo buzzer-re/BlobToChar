@@ -1,3 +1,5 @@
+// #include "Config.h"
+
 #include "FileManager.h"
 #include "Argparse.h"
 
@@ -18,6 +20,9 @@ void displayHelp() {
 
 int main(int argc, char** argv)
 {
+
+    // std::cout << PROJECT_NAME << " " << PROJECT_MAJOR << "." << PROJECT_MINOR << std::endl;
+    
     if (argc < 3) {
         displayHelp();
         return 1;
