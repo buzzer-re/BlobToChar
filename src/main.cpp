@@ -1,5 +1,3 @@
-// #include "Config.h"
-
 #include "FileManager.h"
 #include "Argparse.h"
 
@@ -14,15 +12,14 @@
 #define LINE_NUMBER "linenumber"
 
 
+bool insertNewLine(const std::string& value, const std::string& filePath, int line);
+
 void displayHelp() {
-    std::cout << "Usage: ./blobBuilder --blobname <blob_path> --varname <variable_name> --linenumber <line_to_insert>\n";
+    std::cout << "Usage: ./blobBuilder --blobname <blob_path> --varname <variable_name> --filename <file_name_to_save> --linenumber <line_to_insert>\n";
 }
 
 int main(int argc, char** argv)
 {
-
-    // std::cout << PROJECT_NAME << " " << PROJECT_MAJOR << "." << PROJECT_MINOR << std::endl;
-    
     if (argc < 3) {
         displayHelp();
         return 1;
@@ -39,27 +36,27 @@ int main(int argc, char** argv)
     FileManager fileManager;
     
     const std::string blobTarget = args.getArgument(BLOB_NAME).argValue;
-    std::string varName = args.getArgument(VAR_NAME).argValue;
-    std::string insertFile = args.getArgument(FILE_NAME).argValue;
-    // std::string lineNumber = args.getArgument(LINE_NUMBER).argValue;
-    // int lineNumber_i;
+    std::string varName          = args.getArgument(VAR_NAME).argValue;
+    std::string insertFile       = args.getArgument(FILE_NAME).argValue;
+    std::string lineNumber       = args.getArgument(LINE_NUMBER).argValue;
+    int lineNumber_i;
 
-    // if (lineNumber != "") {
-    //     try {
-    //         lineNumber = std::stoi(lineNumber);
-    //     } catch (std::invalid_argument const &e) {
-    //         std::cerr << "Line number must be a number!\n";
-    //         return 1;
-    //     } catch (std::out_of_range const&e) {
-    //         std::cerr << "Dud, are u trying overflow me ?\n";
-    //         return 1;
-    //     }
-    // }
-
-    if (fileManager.exists(blobTarget)) {
+    if (lineNumber != "") {
+        try {
+            lineNumber_i = std::stoi(lineNumber);
+        } catch (std::invalid_argument const &e) {
+            std::cerr << "Line number must be a number!\n";
+            return 1;
+        } catch (std::out_of_range const&e) {
+            std::cerr << "Dud, are u trying overflow me ?\n";
+            return 1;
+        } 
+    }
+    
+    if (fileManager.exists(blobTarget) && fileManager.exists(insertFile)) {
         std::string codeBuilder;
 
-        codeBuilder = "char " + varName + "[] = ";
+        codeBuilder = "char " + varName + "[] = {";
         
         std::unique_ptr<ByteArray> fileByteArray(fileManager.toByteArray(blobTarget));
 
@@ -73,10 +70,35 @@ int main(int argc, char** argv)
         delete[] hexRep;
         codeBuilder += "};";
 
+        if (insertNewLine(codeBuilder, insertFile, lineNumber_i)) {
+            std::cout << "New variable " << varName << " inserted with success in line " << lineNumber_i << " of the file " << insertFile << std::endl;
+        } else {
+            std::cerr << "Unable to insert value in file " << insertFile << std::endl;
+            std::cerr << "Press enter to display the value in stdout\n";
+            getchar();
+            std::cout << codeBuilder << std::endl;
+        }
+
     } else {
-        std::cerr << "Invalid file " << blobTarget << std::endl;
+        std::cerr << "Invalid blob or insert file "  << std::endl;
         return 1;
     }
 
     return 0;
+}
+
+
+bool insertNewLine(const std::string& value, const std::string& filePath, int line)
+{
+    int lineCount = 0;
+    std::fstream fst(filePath, std::fstream::in | std::fstream::out | std::fstream::app);
+    std::string l;
+
+
+    for (lineCount = 0; lineCount != line; std::getline(fst,l), lineCount++);
+    
+    
+    fst.write(value.c_str(), value.size());
+
+    return true;
 }
