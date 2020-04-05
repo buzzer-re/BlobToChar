@@ -11,8 +11,10 @@
 #define FILE_NAME   "filename"
 #define LINE_NUMBER "linenumber"
 
-
-bool insertNewLine(const std::string& value, const std::string& filePath, int line);
+#define BAD_FILE 0
+#define GOOD 1
+#define INVALID_NUM 2
+int insertNewLine(const std::string& value, const std::string& filePath, int line);
 
 void displayHelp() {
     std::cout << "Usage: ./blobBuilder --blobname <blob_path> --varname <variable_name> --filename <file_name_to_save> --linenumber <line_to_insert>\n";
@@ -43,7 +45,7 @@ int main(int argc, char** argv)
 
     if (lineNumber != "") {
         try {
-            lineNumber_i = std::stoi(lineNumber);
+            lineNumber_i = std::stoi(lineNumber) - 1;
         } catch (std::invalid_argument const &e) {
             std::cerr << "Line number must be a number!\n";
             return 1;
@@ -68,37 +70,32 @@ int main(int argc, char** argv)
         }
 
         delete[] hexRep;
-        codeBuilder += "};";
+        codeBuilder += "};\n";
+        int err = fileManager.insertMiddleFile(codeBuilder, insertFile, lineNumber_i);
 
-        if (insertNewLine(codeBuilder, insertFile, lineNumber_i)) {
+        if (err == GOOD) {
             std::cout << "New variable " << varName << " inserted with success in line " << lineNumber_i << " of the file " << insertFile << std::endl;
         } else {
             std::cerr << "Unable to insert value in file " << insertFile << std::endl;
+
+            std::cout << "Err: ";
+            switch(err) {
+                case BAD_FILE:
+                    std::cerr << "File does not exist!\n";break;
+                case INVALID_NUM:
+                    std::cerr << "Invalid line number!\n";break;
+            }
+
             std::cerr << "Press enter to display the value in stdout\n";
             getchar();
             std::cout << codeBuilder << std::endl;
         }
 
     } else {
-        std::cerr << "Invalid blob or insert file "  << std::endl;
+        std::cerr << "Invalid blob or inserted file "  << std::endl;
         return 1;
     }
 
     return 0;
 }
 
-
-bool insertNewLine(const std::string& value, const std::string& filePath, int line)
-{
-    int lineCount = 0;
-    std::fstream fst(filePath, std::fstream::in | std::fstream::out | std::fstream::app);
-    std::string l;
-
-
-    for (lineCount = 0; lineCount != line; std::getline(fst,l), lineCount++);
-    
-    
-    fst.write(value.c_str(), value.size());
-
-    return true;
-}

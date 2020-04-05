@@ -1,8 +1,11 @@
 #pragma once
 
+#include <iostream>
+
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <memory>
 #include <cstdio>
 
@@ -21,7 +24,11 @@ public:
     inline unsigned int getSize(const std::string& fPath) const;
 
     ByteArray* toByteArray(const std::string& fPath) const;
+
+    int insertMiddleFile(const std::string& value, const std::string& fPath, int lineNumber) const;
 private:
     std::string basePath;
+
+    enum err_enum {BAD_FILE, GOOD, INVALID_NUM};
 };
 
