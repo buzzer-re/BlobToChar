@@ -63,7 +63,6 @@ int FileManager::insertMiddleFile(const std::string& value, const std::string& f
             lineCount++;
             continue;
         }
-        std::cout << offset << std::endl;
         return INVALID_NUM;
     }
 
