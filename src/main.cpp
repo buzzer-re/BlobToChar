@@ -96,8 +96,6 @@ int main(int argc, char** argv)
                 std::cout << codeBuilder << std::endl;
             }
         } else {
-            std::cerr << "Press enter to display the value in stdout\n";
-            getchar();
             std::cout << codeBuilder << std::endl;
         }
 
