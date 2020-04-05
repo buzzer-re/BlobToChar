@@ -4,40 +4,46 @@
 #include <memory>
 #include <string>
 #include <iostream>
-
+#include <type_traits>
 
 #define BLOB_NAME   "blobname"
 #define VAR_NAME    "varname"
 #define FILE_NAME   "filename"
 #define LINE_NUMBER "linenumber"
 
-void displayHelp() {
-    std::cout << "Usage: ./blobBuilder --blobname <blob_path> --varname <variable_name> --filename <file_name_to_save> --linenumber <line_to_insert>\n";
+int displayHelp(const char* progName) {
+
+    return std::fprintf(stderr, "Usage: %s [options]\n\n--blobname\tName of the binary file\n--filename\tName of the target source\n--linenumber\tNumber to insert\n--varname\tvariable name inside code\n", progName);
 }
+
 
 int main(int argc, char** argv)
 {
+    
     if (argc < 3) {
-        displayHelp();
-        return 1;
+        return displayHelp(argv[0]);
     } 
 
     ArgParse args(argc, argv);
-    args.addArgument(BLOB_NAME, true);
-    args.addArgument(VAR_NAME, true);
-    args.addArgument(FILE_NAME, true);
-    args.addArgument(LINE_NUMBER, true);
+    /// addArgument(argName, require_value, require_be_passed)
+    args.addArgument(BLOB_NAME, true, true);
+    args.addArgument(VAR_NAME, true, false);
+    args.addArgument(FILE_NAME, true, false);
+    args.addArgument(LINE_NUMBER, true, false);
     
-    if (!args.parse()) return 1;
+    if (!args.parse()) {
+        return displayHelp(argv[0]);
+    }
 
     FileManager fileManager;
     
-    const std::string blobTarget = args.getArgument(BLOB_NAME).argValue;
-    std::string varName          = args.getArgument(VAR_NAME).argValue;
-    std::string insertFile       = args.getArgument(FILE_NAME).argValue;
-    std::string lineNumber       = args.getArgument(LINE_NUMBER).argValue;
+    const std::string blobTarget       = args.getArgument(BLOB_NAME).argValue;
+    std::string varName                = args.getArgument(VAR_NAME).argValue;
+    const std::string insertFile       = args.getArgument(FILE_NAME).argValue;
+    const std::string lineNumber       = args.getArgument(LINE_NUMBER).argValue;
+    
     int lineNumber_i;
-
+    
     if (lineNumber != "") {
         try {
             lineNumber_i = std::stoi(lineNumber) - 1;
@@ -49,8 +55,10 @@ int main(int argc, char** argv)
             return 1;
         } 
     }
+
+    varName = varName == "" ? "arr" : varName;
     
-    if (fileManager.exists(blobTarget) && fileManager.exists(insertFile)) {
+    if (fileManager.exists(blobTarget)) {
         std::string codeBuilder;
 
         codeBuilder = "char " + varName + "[] = {";
@@ -66,25 +74,33 @@ int main(int argc, char** argv)
 
         delete[] hexRep;
         codeBuilder += "};\n";
-        int err = fileManager.insertMiddleFile(codeBuilder, insertFile, lineNumber_i);
 
-        if (err == fileManager.GOOD) {
-            std::cout << "New variable " << varName << " inserted with success in line " << lineNumber_i << " of the file " << insertFile << std::endl;
-        } else {
-            std::cerr << "Unable to insert value in file " << insertFile << std::endl;
+        if (insertFile != "") {
+            int err = fileManager.insertMiddleFile(codeBuilder, insertFile, lineNumber_i);
 
-            std::cout << "Err: ";
-            switch(err) {
-                case fileManager.BAD_FILE:
-                    std::cerr << "File does not exist!\n";break;
-                case fileManager.INVALID_NUM:
-                    std::cerr << "Invalid line number!\n";break;
+            if (err == fileManager.GOOD) {
+                std::cout << "New variable " << varName << " inserted with success in line " << lineNumber_i << " of the file " << insertFile << std::endl;
+            } else {
+                std::cerr << "Unable to insert value in file " << insertFile << std::endl;
+
+                std::cout << "Err: ";
+                switch(err) {
+                    case fileManager.BAD_FILE:
+                        std::cerr << "File does not exist!\n";break;
+                    case fileManager.INVALID_NUM:
+                        std::cerr << "Invalid line number!\n";break;
+                }
+
+                std::cerr << "Press enter to display the value in stdout\n";
+                getchar();
+                std::cout << codeBuilder << std::endl;
             }
-
+        } else {
             std::cerr << "Press enter to display the value in stdout\n";
             getchar();
             std::cout << codeBuilder << std::endl;
         }
+
 
     } else {
         std::cerr << "Invalid blob or inserted file "  << std::endl;
