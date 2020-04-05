@@ -61,5 +61,6 @@ Argument& ArgParse::getArgument(const std::string& argument)
     if (argIt == this->arguments.end()) 
         throw ("Unable to find argument ");
 
+
     return argIt->second;
 }

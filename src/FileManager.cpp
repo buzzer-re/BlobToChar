@@ -39,3 +39,46 @@ ByteArray* FileManager::toByteArray(const std::string& fPath) const
 
     return nullptr;
 }
+
+
+int FileManager::insertMiddleFile(const std::string& value, const std::string& fPath, int lineNumber) const
+{
+
+    if (!this->exists(fPath)) {
+        return BAD_FILE;
+    }
+
+    int lineCount = 0;
+    unsigned offset = 0;
+    std::string stemp;
+    
+    unsigned fSize = this->getSize(fPath);
+    std::fstream fst(fPath);
+
+    while (lineCount != lineNumber)
+    {
+        std::getline(fst, stemp);
+        if (!fst.eof()) {
+            offset += stemp.size() + 1;
+            lineCount++;
+            continue;
+        }
+        return INVALID_NUM;
+    }
+
+    fSize -= offset;
+    char* contentBuff = new char[fSize];
+
+    fst.seekp(offset, fst.beg);
+    fst.read(contentBuff, fSize);
+    contentBuff[fSize] = 0x00;
+
+    fst.seekp(offset, fst.beg);
+    fst << value;
+    fst << contentBuff;
+
+    delete[] contentBuff;
+    fst.close();
+
+    return GOOD;
+}
