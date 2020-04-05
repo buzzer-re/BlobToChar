@@ -15,6 +15,7 @@ struct Argument {
     std::string argName;
     std::string argValue;
     bool required;
+    bool required_arg;
     int argIndex;
 };
 
@@ -23,8 +24,8 @@ class ArgParse {
 public:
     ArgParse(int argc, char* argv[]);
     bool parse();
-
-    bool addArgument(const std::string& argument, bool required);
+    /// required an argument and if its requried to be passed
+    bool addArgument(const std::string& argument, bool required_arg, bool required);
     std::unordered_map<std::string, Argument>& getArgumentMap() const;
     
     Argument& getArgument(const std::string& argument);
