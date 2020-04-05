@@ -9,11 +9,11 @@ if (${CMAKE_VERSION} VERSION_LESS 3.1)
 endif()
 
 
-project(PayloadToChar VERSION 1.0 DESCRIPTION "Transform your blob into an simple char array")
+project(BlobToChar VERSION 1.0 DESCRIPTION "Transform your blob into an simple char array")
 
 add_library(FileManager src/FileManager.cpp)
 add_library(ArgParser src/Argparse.cpp)
 
-add_executable(PayloadToChar src/main.cpp)
-target_link_libraries(PayloadToChar PUBLIC FileManager)
-target_link_libraries(PayloadToChar PUBLIC ArgParser)
+add_executable(BlobToChar src/main.cpp)
+target_link_libraries(BlobToChar PUBLIC FileManager)
+target_link_libraries(BlobToChar PUBLIC ArgParser)
