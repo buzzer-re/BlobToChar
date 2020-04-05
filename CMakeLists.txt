@@ -17,3 +17,6 @@ add_library(ArgParser src/Argparse.cpp)
 add_executable(BlobToChar src/main.cpp)
 target_link_libraries(BlobToChar PUBLIC FileManager)
 target_link_libraries(BlobToChar PUBLIC ArgParser)
+
+
+install(TARGETS BlobToChar DESTINATION bin)
