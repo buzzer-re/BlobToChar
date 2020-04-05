@@ -11,11 +11,6 @@
 #define FILE_NAME   "filename"
 #define LINE_NUMBER "linenumber"
 
-#define BAD_FILE 0
-#define GOOD 1
-#define INVALID_NUM 2
-int insertNewLine(const std::string& value, const std::string& filePath, int line);
-
 void displayHelp() {
     std::cout << "Usage: ./blobBuilder --blobname <blob_path> --varname <variable_name> --filename <file_name_to_save> --linenumber <line_to_insert>\n";
 }
