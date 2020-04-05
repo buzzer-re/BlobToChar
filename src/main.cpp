@@ -68,16 +68,16 @@ int main(int argc, char** argv)
         codeBuilder += "};\n";
         int err = fileManager.insertMiddleFile(codeBuilder, insertFile, lineNumber_i);
 
-        if (err == GOOD) {
+        if (err == fileManager.GOOD) {
             std::cout << "New variable " << varName << " inserted with success in line " << lineNumber_i << " of the file " << insertFile << std::endl;
         } else {
             std::cerr << "Unable to insert value in file " << insertFile << std::endl;
 
             std::cout << "Err: ";
             switch(err) {
-                case BAD_FILE:
+                case fileManager.BAD_FILE:
                     std::cerr << "File does not exist!\n";break;
-                case INVALID_NUM:
+                case fileManager.INVALID_NUM:
                     std::cerr << "Invalid line number!\n";break;
             }
 

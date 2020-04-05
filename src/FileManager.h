@@ -28,6 +28,7 @@ public:
 private:
     std::string basePath;
 
+public:
     enum err_enum {BAD_FILE, GOOD, INVALID_NUM};
 };
 
