@@ -1,5 +1,7 @@
 ### BlobToChar
 
+![C/C++ CI](https://github.com/AandersonL/BlobToChar/workflows/C/C++%20CI/badge.svg)
+
 ## What is this ?
 
 BlobToChar its an C++ program that allows you to load an binary file in C arrays format, this is good if you want to embed files inside your source code.
