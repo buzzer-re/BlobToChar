@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     if (fileManager.exists(blobTarget)) {
         std::string codeBuilder;
 
-        codeBuilder = "char " + varName + "[] = {";
+        codeBuilder = "unsigned char " + varName + "[] = {";
         
         std::unique_ptr<ByteArray> fileByteArray(fileManager.toByteArray(blobTarget));
 
