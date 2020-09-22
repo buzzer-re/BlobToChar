@@ -23,15 +23,19 @@ ByteArray* FileManager::toByteArray(const std::string& fPath) const
 {
     if (this->exists(fPath)) {
         ByteArray* bytearray = new ByteArray;
-        bytearray->reserve(this->getSize(fPath));
-        
+
+        uint fSize = this->getSize(fPath);
+        if (fSize == 0) return nullptr;
+        bytearray->reserve(fSize);
+
         std::ifstream fileStream(fPath, std::ifstream::ios_base::binary);
 
+        unsigned char uniqueByte;
+        fileStream >> uniqueByte;
 
-        while (fileStream) {
-            unsigned char uniqueByte;
-            fileStream.read((char*) &uniqueByte, sizeof(unsigned char));
+        while (fileStream.good()) {
             bytearray->push_back(uniqueByte);
+            fileStream >> uniqueByte;
         }
 
         return bytearray;
