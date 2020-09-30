@@ -56,24 +56,25 @@ int main(int argc, char** argv)
         } 
     }
 
-    varName = varName == "" ? "arr" : varName;
+    varName = varName == "" ? "buff" : varName;
     
     if (fileManager.exists(blobTarget)) {
         std::string codeBuilder;
-
         codeBuilder = "unsigned char " + varName + "[] = {";
-        
         std::unique_ptr<ByteArray> fileByteArray(fileManager.toByteArray(blobTarget));
 
         char* hexRep = new char[4];  // 0xFF
-        
+
         for (auto it = fileByteArray->begin(); it != fileByteArray->end(); ++it) {
             std::sprintf(hexRep, "0x%x",  *it);
             codeBuilder += std::string(hexRep) + ",";
         }
 
+        codeBuilder.append("};\n"); 
+        codeBuilder.append("unsigned int " + varName + "_size = ");
+        codeBuilder.append(std::to_string(fileByteArray->size()));
+        codeBuilder.append(";\n");
         delete[] hexRep;
-        codeBuilder += "};\n";
 
         if (insertFile != "") {
             int err = fileManager.insertMiddleFile(codeBuilder, insertFile, lineNumber_i);
