@@ -58,7 +58,8 @@ You can use this tool for:
 * Load anything that you want be in C arrays format!
 
 
-
+## Example
+[![asciicast](https://asciinema.org/a/YzEs0gUpLeMKOX7TnbTGbJIaB.svg)](https://asciinema.org/a/YzEs0gUpLeMKOX7TnbTGbJIaB)
 
 ### Options
 ```shell
