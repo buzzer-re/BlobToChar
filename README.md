@@ -60,7 +60,7 @@ You can use this tool for:
 
 ## Example
 
-[![asciicast](https://asciinema.org/a/YzEs0gUpLeMKOX7TnbTGbJIaB.svg)](https://asciinema.org/a/YzEs0gUpLeMKOX7TnbTGbJIaB)
+![](res/example.gif)
 
 ### Options
 ```shell
