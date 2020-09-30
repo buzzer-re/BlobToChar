@@ -56,7 +56,7 @@ int main(int argc, char** argv)
         } 
     }
 
-    varName = varName == "" ? "arr" : varName;
+    varName = varName == "" ? "buff" : varName;
     
     if (fileManager.exists(blobTarget)) {
         std::string codeBuilder;
@@ -70,10 +70,10 @@ int main(int argc, char** argv)
             codeBuilder += std::string(hexRep) + ",";
         }
 
-        codeBuilder.append("}\n"); 
+        codeBuilder.append("};\n"); 
         codeBuilder.append("unsigned int " + varName + "_size = ");
         codeBuilder.append(std::to_string(fileByteArray->size()));
-        codeBuilder.append("\n");
+        codeBuilder.append(";\n");
         delete[] hexRep;
 
         if (insertFile != "") {

@@ -1,7 +1,7 @@
 #include "FileManager.h"
 
 
-inline bool FileManager::exists(const std::string& fPath) const
+bool FileManager::exists(const std::string& fPath) const
 {
     return access(fPath.c_str(), F_OK) != -1;
 }
@@ -29,13 +29,14 @@ ByteArray* FileManager::toByteArray(const std::string& fPath) const
         bytearray->reserve(fSize);
 
         std::ifstream fileStream(fPath, std::ifstream::ios_base::binary);
+        if (!fileStream) return nullptr;
 
-        unsigned char uniqueByte;
-        fileStream >> uniqueByte;
-
-        while (fileStream.good()) {
+        uint8_t uniqueByte;
+        while (true) {
+            fileStream.read((char*) &uniqueByte, 1);
+            if (!fileStream) break;
             bytearray->push_back(uniqueByte);
-            fileStream >> uniqueByte;
+
         }
 
         return bytearray;

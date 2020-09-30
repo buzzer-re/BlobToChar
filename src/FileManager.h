@@ -19,7 +19,7 @@ typedef std::vector<unsigned char> ByteArray;
 class FileManager 
 {
 public:
-    inline bool exists(const std::string& fPath) const;
+    bool exists(const std::string& fPath) const;
     inline unsigned int getSize(const std::string& fPath) const;
 
     ByteArray* toByteArray(const std::string& fPath) const;
