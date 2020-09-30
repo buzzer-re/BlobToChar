@@ -59,8 +59,7 @@ You can use this tool for:
 
 
 ## Example
-
-![](res/example.gif)
+[![asciicast](https://asciinema.org/a/YzEs0gUpLeMKOX7TnbTGbJIaB.svg)](https://asciinema.org/a/YzEs0gUpLeMKOX7TnbTGbJIaB)
 
 ### Options
 ```shell
